@@ -752,25 +752,25 @@ syscall_desc_t syscall_desc[SYSCALL_MAX] = {
     {3, 0, 0, {0, 0, 0, 0, 0, 0}, NULL, NULL},
     /* __NR_sched_getattr = 315 */
     {4, 0, 1, {0, sizeof(struct sched_attr), 0, 0, 0, 0}, NULL, NULL},
-    /* __NR_renameat2 316 */
-    /* __NR_seccomp 317 */
-    /* __NR_getrandom 318 */
-    /* __NR_memfd_create 319 */
-    /* __NR_kexec_file_load 320 */
-    /* __NR_bpf 321 */
-    /* __NR_execveat 322 */
-    /* __NR_userfaultfd 323 */
-    /* __NR_membarrier 324 */
-    /* __NR_mlock2 325 */
-    /* __NR_copy_file_range 326 */
-    /* __NR_preadv2 327 */
-    /* __NR_pwritev2 328 */
-    /* __NR_pkey_mprotect 329 */
-    /* __NR_pkey_alloc 330 */
-    /* __NR_pkey_free 331 */
-    /* __NR_statx 332 */
-    /* __NR_io_pgetevents 333 */
-    /* __NR_rseq 334 */
+/* __NR_renameat2 316 */
+/* __NR_seccomp 317 */
+/* __NR_getrandom 318 */
+/* __NR_memfd_create 319 */
+/* __NR_kexec_file_load 320 */
+/* __NR_bpf 321 */
+/* __NR_execveat 322 */
+/* __NR_userfaultfd 323 */
+/* __NR_membarrier 324 */
+/* __NR_mlock2 325 */
+/* __NR_copy_file_range 326 */
+/* __NR_preadv2 327 */
+/* __NR_pwritev2 328 */
+/* __NR_pkey_mprotect 329 */
+/* __NR_pkey_alloc 330 */
+/* __NR_pkey_free 331 */
+/* __NR_statx 332 */
+/* __NR_io_pgetevents 333 */
+/* __NR_rseq 334 */
 #endif // __linux__
 };
 
@@ -783,7 +783,8 @@ syscall_desc_t syscall_desc[SYSCALL_MAX] = {
  * returns:	0 on success, 1 on error
  */
 int syscall_set_pre(syscall_desc_t *desc,
-                    void (*pre)(THREADID, syscall_ctx_t *)) {
+                    void (*pre)(THREADID, syscall_ctx_t *))
+{
   /* sanity checks */
   if (unlikely((desc == NULL) | (pre == NULL)))
     /* return with failure */
@@ -807,8 +808,8 @@ int syscall_set_pre(syscall_desc_t *desc,
  *
  * returns:	0 on success, 1 on error
  */
-int syscall_set_post(syscall_desc_t *desc,
-                     void (*post)(THREADID, syscall_ctx_t *)) {
+int syscall_set_post(syscall_desc_t *desc, void (*post)(THREADID, syscall_ctx_t *))
+{
   /* sanity checks */
   if (unlikely((desc == NULL) | (post == NULL)))
     /* return with failure */
@@ -831,7 +832,8 @@ int syscall_set_post(syscall_desc_t *desc,
  *
  * returns:     0 on success, 1 on error
  */
-int syscall_clr_pre(syscall_desc_t *desc) {
+int syscall_clr_pre(syscall_desc_t *desc)
+{
   /* sanity check */
   if (unlikely(desc == NULL))
     /* return with failure */
@@ -856,7 +858,8 @@ int syscall_clr_pre(syscall_desc_t *desc) {
  *
  * returns:     0 on success, 1 on error
  */
-int syscall_clr_post(syscall_desc_t *desc) {
+int syscall_clr_post(syscall_desc_t *desc)
+{
   /* sanity check */
   if (unlikely(desc == NULL))
     /* return with failure */
@@ -876,7 +879,8 @@ int syscall_clr_post(syscall_desc_t *desc) {
 
 #ifdef __linux__
 /* __NR_(p)read(64) and __NR_readlink post syscall hook */
-static void post_read_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_read_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* read()/readlink() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -886,7 +890,8 @@ static void post_read_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_getgroups post syscall_hook */
-static void post_getgroups_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_getgroups_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* getgroups() was not successful */
   if ((long)ctx->ret <= 0 || (gid_t *)ctx->arg[SYSCALL_ARG1] == NULL)
     return;
@@ -896,7 +901,8 @@ static void post_getgroups_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_readlinkat post syscall hook */
-static void post_readlinkat_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_readlinkat_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* readlinkat() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -906,7 +912,8 @@ static void post_readlinkat_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_mmap post syscall hook */
-static void post_mmap_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_mmap_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* the map offset */
   size_t offset = (size_t)ctx->arg[SYSCALL_ARG1];
 
@@ -930,7 +937,8 @@ static void post_mmap_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_readv and __NR_preadv post syscall hook */
-static void post_readv_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_readv_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* iterators */
   int i;
   struct iovec *iov;
@@ -946,7 +954,8 @@ static void post_readv_hook(THREADID tid, syscall_ctx_t *ctx) {
     return;
 
   /* iterate the iovec structures */
-  for (i = 0; i < (int)ctx->arg[SYSCALL_ARG2] && tot > 0; i++) {
+  for (i = 0; i < (int)ctx->arg[SYSCALL_ARG2] && tot > 0; i++)
+  {
     /* get an iovec  */
     iov = ((struct iovec *)ctx->arg[SYSCALL_ARG1]) + i;
 
@@ -962,7 +971,8 @@ static void post_readv_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_epoll_pwait post syscall hook */
-static void post_epoll_wait_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_epoll_wait_hook(THREADID tid, syscall_ctx_t *ctx)
+{
 
   /* epoll_pwait() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
@@ -974,7 +984,8 @@ static void post_epoll_wait_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_poll and __NR_ppoll post syscall hook */
-static void post_poll_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_poll_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* iterators */
   size_t i;
   struct pollfd *pfd;
@@ -984,7 +995,8 @@ static void post_poll_hook(THREADID tid, syscall_ctx_t *ctx) {
     return;
 
   /* iterate the pollfd structures */
-  for (i = 0; i < (size_t)ctx->arg[SYSCALL_ARG1]; i++) {
+  for (i = 0; i < (size_t)ctx->arg[SYSCALL_ARG1]; i++)
+  {
     /* get pollfd */
     pfd = ((struct pollfd *)ctx->arg[SYSCALL_ARG0]) + i;
 
@@ -994,7 +1006,8 @@ static void post_poll_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_mq_timedreceive post syscall hook */
-static void post_mq_timedreceive_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_mq_timedreceive_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* mq_timedreceive() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1009,13 +1022,15 @@ static void post_mq_timedreceive_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_get_mempolicy */
-static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* get_mempolicy() was not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
 
   /* flags is zero */
-  if ((unsigned long)ctx->arg[SYSCALL_ARG4] == 0) {
+  if ((unsigned long)ctx->arg[SYSCALL_ARG4] == 0)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG0], sizeof(int));
     tagmap_clrn(ctx->arg[SYSCALL_ARG1], sizeof(unsigned long));
@@ -1024,7 +1039,8 @@ static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 
   /* MPOL_F_MEMS_ALLOWED is set on flags */
-  if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_MEMS_ALLOWED) != 0) {
+  if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_MEMS_ALLOWED) != 0)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG1], sizeof(unsigned long));
     /* done */
@@ -1033,7 +1049,8 @@ static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
 
   /* MPOL_F_ADDR is set on flags */
   if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_ADDR) != 0 &&
-      ((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) == 0) {
+      ((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) == 0)
+  {
     /* mode is provided */
     if ((int *)ctx->arg[SYSCALL_ARG0] != NULL)
       /* clear the tag bits */
@@ -1049,7 +1066,8 @@ static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
 
   /* MPOL_F_NODE & MPOL_F_ADDR is set on flags */
   if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_ADDR) != 0 &&
-      ((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) != 0) {
+      ((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) != 0)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG0], sizeof(int));
     /* done */
@@ -1057,7 +1075,8 @@ static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 
   /* MPOL_F_NODE is set on flags */
-  if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) != 0) {
+  if (((unsigned long)ctx->arg[SYSCALL_ARG4] & MPOL_F_NODE) != 0)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG0], sizeof(int));
     /* done */
@@ -1066,7 +1085,8 @@ static void post_get_mempolicy_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_lookup_dcookie post syscall hook */
-static void post_lookup_dcookie_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_lookup_dcookie_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* lookup_dcookie() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1076,7 +1096,8 @@ static void post_lookup_dcookie_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_io_getevents post syscall hook */
-static void post_io_getevents_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_io_getevents_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* io_getevents() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1092,7 +1113,8 @@ static void post_io_getevents_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_(f, l)listxattr post syscall hook */
-static void post_listxattr_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_listxattr_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* *listxattr() was not successful; optimized branch */
   if ((long)ctx->ret <= 0 || (void *)ctx->arg[SYSCALL_ARG1] == NULL)
     return;
@@ -1102,7 +1124,8 @@ static void post_listxattr_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_(f, l)getxattr post syscall hook */
-static void post_getxattr_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_getxattr_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* *getxattr() was not successful; optimized branch */
   if ((long)ctx->ret <= 0 || (void *)ctx->arg[SYSCALL_ARG2] == NULL)
     return;
@@ -1112,7 +1135,8 @@ static void post_getxattr_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_getdents post syscall hook */
-static void post_getdents_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_getdents_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* getdents() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1122,7 +1146,8 @@ static void post_getdents_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_mincore post syscall hook */
-static void post_mincore_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_mincore_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* mincore() was not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
@@ -1133,7 +1158,8 @@ static void post_mincore_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_getcwd post syscall hook */
-static void post_getcwd_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_getcwd_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* getcwd() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1143,7 +1169,8 @@ static void post_getcwd_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_rt_sigpending post syscall hook */
-static void post_rt_sigpending_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_rt_sigpending_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* rt_sigpending() was not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
@@ -1153,7 +1180,8 @@ static void post_rt_sigpending_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_quotactl post syscall hook */
-static void post_quotactl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_quotactl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* offset */
   size_t off;
 
@@ -1162,7 +1190,8 @@ static void post_quotactl_hook(THREADID tid, syscall_ctx_t *ctx) {
     return;
 
   /* different offset ranges */
-  switch ((int)ctx->arg[SYSCALL_ARG0]) {
+  switch ((int)ctx->arg[SYSCALL_ARG0])
+  {
   case Q_GETFMT:
     off = sizeof(__u32);
     break;
@@ -1188,7 +1217,8 @@ static void post_quotactl_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_modify_ldt post syscall hook */
-static void post_modify_ldt_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_modify_ldt_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* modify_ldt() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1198,13 +1228,15 @@ static void post_modify_ldt_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_fcntl post syscall hook */
-static void post_fcntl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_fcntl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* fcntl() was not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
 
   /* differentiate based on the cmd argument */
-  switch ((int)ctx->arg[SYSCALL_ARG1]) {
+  switch ((int)ctx->arg[SYSCALL_ARG1])
+  {
   /* F_GETLK */
   case F_GETLK:
     /* clear the tag bits */
@@ -1233,13 +1265,15 @@ static void post_fcntl_hook(THREADID tid, syscall_ctx_t *ctx) {
  * NOTE: this is not related to syslog(3)
  * see klogctl(3)/syslog(2)
  */
-static void post_syslog_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_syslog_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* syslog() was not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
 
   /* differentiate based on the type */
-  switch ((int)ctx->arg[SYSCALL_ARG0]) {
+  switch ((int)ctx->arg[SYSCALL_ARG0])
+  {
   case 2:
   case 3:
   case 4:
@@ -1253,7 +1287,8 @@ static void post_syslog_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR__sysctl post syscall hook */
-static void post__sysctl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post__sysctl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* _sysctl arguments */
   struct __sysctl_args *sa;
 
@@ -1268,7 +1303,8 @@ static void post__sysctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   tagmap_clrn((size_t)sa->newval, sa->newlen);
 
   /* save old value is specified */
-  if (sa->oldval != NULL) {
+  if (sa->oldval != NULL)
+  {
     /* clear the tag bits */
     tagmap_clrn((size_t)sa->oldval, *sa->oldlenp);
 
@@ -1278,7 +1314,8 @@ static void post__sysctl_hook(THREADID tid, syscall_ctx_t *ctx) {
 }
 
 /* __NR_recvmmsg post syscall hook */
-static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* message headers; recvmsg(2) recvmmsg(2) */
   struct mmsghdr *msg;
   struct msghdr *m;
@@ -1298,7 +1335,8 @@ static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
     return;
 
   /* iterate the mmsghdr structures */
-  for (i = 0; i < (size_t)ctx->ret; i++) {
+  for (i = 0; i < (size_t)ctx->ret; i++)
+  {
     /* get the next mmsghdr structure */
     msg = ((struct mmsghdr *)ctx->arg[SYSCALL_ARG1]) + i;
 
@@ -1306,7 +1344,8 @@ static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
     m = &msg->msg_hdr;
 
     /* source address specified */
-    if (m->msg_name != NULL) {
+    if (m->msg_name != NULL)
+    {
       /* clear the tag bits */
       tagmap_clrn((size_t)m->msg_name, m->msg_namelen);
 
@@ -1315,7 +1354,8 @@ static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
     }
 
     /* ancillary data specified */
-    if (m->msg_control != NULL) {
+    if (m->msg_control != NULL)
+    {
       /* clear the tag bits */
       tagmap_clrn((size_t)m->msg_control, m->msg_controllen);
 
@@ -1331,7 +1371,8 @@ static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
     tagmap_clrn((size_t)&msg->msg_len, sizeof(unsigned));
 
     /* iterate the iovec structures */
-    for (j = 0; j < m->msg_iovlen && tot > 0; j++) {
+    for (j = 0; j < m->msg_iovlen && tot > 0; j++)
+    {
       /* get the next I/O vector */
       iov = &m->msg_iov[j];
 
@@ -1353,7 +1394,8 @@ static void post_recvmmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
   tagmap_clrn(ctx->arg[SYSCALL_ARG4], sizeof(struct timespec));
 }
 
-static void post_msgctl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_msgctl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   if (unlikely((long)ctx->ret < 0))
     return;
 
@@ -1361,7 +1403,8 @@ static void post_msgctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   // ctx->arg[SYSCALL_ARG2] -= IPC_FIX;
 
   /* differentiate based on the cmd */
-  switch ((int)ctx->arg[SYSCALL_ARG1]) {
+  switch ((int)ctx->arg[SYSCALL_ARG1])
+  {
   case IPC_STAT:
   case MSG_STAT:
     // case MSG_STAT_ANY:
@@ -1379,7 +1422,8 @@ static void post_msgctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 }
 
-static void post_shmctl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_shmctl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   if (unlikely((long)ctx->ret < 0))
     return;
 
@@ -1388,7 +1432,8 @@ static void post_shmctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   // ctx->arg[SYSCALL_ARG2] -= IPC_FIX;
 
   /* differentiate based on the cmd */
-  switch ((int)ctx->arg[SYSCALL_ARG1]) {
+  switch ((int)ctx->arg[SYSCALL_ARG1])
+  {
   case IPC_STAT:
   case SHM_STAT:
     // case SHM_STAT_ANY:
@@ -1406,7 +1451,8 @@ static void post_shmctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 }
 
-static void post_semctl_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_semctl_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* semctl() was not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
@@ -1419,7 +1465,8 @@ static void post_semctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   // ctx->arg[SYSCALL_ARG2] -= IPC_FIX;
 
   /* differentiate based on the cmd */
-  switch ((int)ctx->arg[SYSCALL_ARG2]) {
+  switch ((int)ctx->arg[SYSCALL_ARG2])
+  {
   case IPC_STAT:
   case SEM_STAT:
     // case SEM_STAT_ANY:
@@ -1437,20 +1484,23 @@ static void post_semctl_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 }
 
-static void post_msgrcv_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_msgrcv_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   if (unlikely((long)ctx->ret <= 0))
     return;
   /* clear the tag bits */
   tagmap_clrn(ctx->arg[SYSCALL_ARG1], (size_t)ctx->ret + sizeof(long));
 }
 
-static void post_accept_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_accept_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
 
   /* addr argument is provided */
-  if ((void *)ctx->arg[SYSCALL_ARG1] != NULL) {
+  if ((void *)ctx->arg[SYSCALL_ARG1] != NULL)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG1], *((int *)ctx->arg[SYSCALL_ARG2]));
 
@@ -1459,7 +1509,8 @@ static void post_accept_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 }
 
-static void post_recvfrom_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_recvfrom_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1468,7 +1519,8 @@ static void post_recvfrom_hook(THREADID tid, syscall_ctx_t *ctx) {
   tagmap_clrn(ctx->arg[SYSCALL_ARG1], (size_t)ctx->ret);
 
   /* sockaddr argument is specified */
-  if ((void *)ctx->arg[SYSCALL_ARG4] != NULL) {
+  if ((void *)ctx->arg[SYSCALL_ARG4] != NULL)
+  {
     /* clear the tag bits */
     tagmap_clrn(ctx->arg[SYSCALL_ARG4], *((int *)ctx->arg[SYSCALL_ARG5]));
 
@@ -1477,7 +1529,8 @@ static void post_recvfrom_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 }
 
-static void post_getsockopt_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_getsockopt_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* not successful; optimized branch */
   if (unlikely((long)ctx->ret < 0))
     return;
@@ -1489,7 +1542,8 @@ static void post_getsockopt_hook(THREADID tid, syscall_ctx_t *ctx) {
   tagmap_clrn(ctx->arg[SYSCALL_ARG4], sizeof(int));
 }
 
-static void post_recvmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
+static void post_recvmsg_hook(THREADID tid, syscall_ctx_t *ctx)
+{
   /* not successful; optimized branch */
   if (unlikely((long)ctx->ret <= 0))
     return;
@@ -1510,7 +1564,8 @@ static void post_recvmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
   msg = (struct msghdr *)ctx->arg[SYSCALL_ARG1];
 
   /* source address specified */
-  if (msg->msg_name != NULL) {
+  if (msg->msg_name != NULL)
+  {
     /* clear the tag bits */
     tagmap_clrn((size_t)msg->msg_name, msg->msg_namelen);
 
@@ -1519,7 +1574,8 @@ static void post_recvmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
   }
 
   /* ancillary data specified */
-  if (msg->msg_control != NULL) {
+  if (msg->msg_control != NULL)
+  {
     /* clear the tag bits */
     tagmap_clrn((size_t)msg->msg_control, msg->msg_controllen);
 
@@ -1534,7 +1590,8 @@ static void post_recvmsg_hook(THREADID tid, syscall_ctx_t *ctx) {
   tot = (size_t)ctx->ret;
 
   /* iterate the iovec structures */
-  for (i = 0; i < msg->msg_iovlen && tot > 0; i++) {
+  for (i = 0; i < msg->msg_iovlen && tot > 0; i++)
+  {
     /* get the next I/O vector */
     iov = &msg->msg_iov[i];
 

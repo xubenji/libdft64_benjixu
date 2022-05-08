@@ -1,0 +1,11 @@
+Pin: pin-3.20-98437-f02b61307
+Copyright 2002-2020 Intel Corporation.
+ [tid:23075] Pausing for 25 seconds to attach to process with pid 23075
+To load the debug info to gdb use:
+*****************************************************************
+set sysroot /not/existing/dir
+file
+add-symbol-file /root/libdft64/tools/obj-intel64/track.so 0x7f5accb10430 -s .data 0x7f5accf218c0 -s .bss 0x7f5accf28f40
+*****************************************************************
+
+ [tid:23075] Resuming

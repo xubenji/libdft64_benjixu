@@ -262,8 +262,8 @@ int main(int argc, char **argv) {
   printf("sleep...\n");
   4007e5:	48 8d 3d e5 01 00 00 	lea    rdi,[rip+0x1e5]        # 4009d1 <_IO_stdin_used+0x31>
   4007ec:	e8 7f fd ff ff       	call   400570 <puts@plt>
-  sleep(20);
-  4007f1:	bf 14 00 00 00       	mov    edi,0x14
+  sleep(5);
+  4007f1:	bf 05 00 00 00       	mov    edi,0x5
   4007f6:	e8 d5 fd ff ff       	call   4005d0 <sleep@plt>
   // dfsan_read_label(&(len), sizeof *buf);
   ret = fread(buf, sizeof *buf, len, fp);

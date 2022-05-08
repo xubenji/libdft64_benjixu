@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   }
   int len = 20;
   printf("sleep...\n");
-  sleep(20);
+  sleep(5);
   // dfsan_read_label(&(len), sizeof *buf);
   ret = fread(buf, sizeof *buf, len, fp);
 

@@ -111,11 +111,12 @@ int main(int argc, char *argv[])
 
   PIN_InitSymbols();
  // printf("track.so sleep...\n");
-  for (int i = 0; i < 1000000; i++)
-  {
-    printf("yes %d\n", i);
-  }
-  sleep(20);
+  // for (int i = 0; i < 15; i++)
+  // {
+  //   sleep(1);
+  //   printf("yes %d\n", i);
+  // }
+  
   if (unlikely(PIN_Init(argc, argv)))
   {
     std::cerr
@@ -133,8 +134,8 @@ int main(int argc, char *argv[])
   PIN_AddApplicationStartFunction(EntryPoint, 0);
 
   hook_file_syscall();
-
+  printf("start...\n");
   PIN_StartProgram();
-
+ 
   return 0;
 }

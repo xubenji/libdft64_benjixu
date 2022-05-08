@@ -9,4 +9,4 @@ cp /root/libdft64/tools/obj-intel64/mini_test.exe /root/libdft64/pin/pin-3.20-98
 objdump -S -d -mi386:x86-64:intel /root/libdft64/tools/obj-intel64/mini_test.exe > /root/libdft64/tools/obj-intel64/mini_test.asm
 objdump -j .text -l -C -S -d -mi386:x86-64:intel /root/libdft64/tools/obj-intel64/track.so > /root/libdft64/tools/obj-intel64/track.asm
 
-/root/libdft64/pin/pin-3.20-98437-gf02b61307-gcc-linux/pin -t obj-intel64/track.so -- obj-intel64/mini_test.exe cur_input
+/root/libdft64/pin/pin-3.20-98437-gf02b61307-gcc-linux/pin -pause_tool 25 -t obj-intel64/track.so  -- obj-intel64/mini_test.exe cur_input
