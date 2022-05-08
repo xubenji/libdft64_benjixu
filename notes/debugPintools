@@ -48,7 +48,7 @@
    
    现在调试信息已经被加载进来了，我们打个断点，然后c执行
    
-   (https://raw.githubusercontent.com/xubenji/libdft64_benjixu/master/notes/gdbDisplay.png)
+   ![image](https://raw.githubusercontent.com/xubenji/libdft64_benjixu/master/notes/gdbDisplay.png)
  
  
  
