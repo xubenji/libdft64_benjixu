@@ -1,0 +1,18 @@
+运行libdft中的tools有一些细节必须注意，我看了好几个星期才搞清楚
+在readme中并没有指出几个重要的问题
+第一个是make tools的时候必须要加上PIN_ROOT的路径。
+比如这样
+make tools PIN_ROOT=/root/pin/
+在make tools之前必须先在src文件夹下先make
+设计还是很繁琐的
+以下的完整编译运行libdft tools的流程
+首先你需要git clone libdft64的代码到任意文件夹，我这里就直接下载到root文件夹下了，（图方便）
+进入libdft64
+运行install_pin.sh
+运行完成以后应该会在root文件夹下生成一个pin3.xxx_xxx（名字很长的文件夹）
+然后进入libdft64/src文件下
+make
+然后进入libdft64/tools文件夹下
+修改此文件夹下的makefile.rules 中的TOOL_ROOTS := libdft-dta 这一行（重要！！！！）
+我就是没有修改这一行，所以总是编译不出libdft-dta, 原本这里是TOOL_ROOTS = track
+然后再在这个文件夹下执行make PIN_ROOT=/root/pin
